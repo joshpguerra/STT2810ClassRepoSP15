@@ -1,7 +1,11 @@
 ---
 title: "Data Management Template"
 author: "Alan T. Arnholt"
+<<<<<<< HEAD
 date: "February 16, 2015"
+=======
+date: "March 1, 2015"
+>>>>>>> 81983154a562db17196b770b37335ecad3858963
 output: html_document
 ---
 
@@ -147,6 +151,107 @@ g3 <- ggplot(data = na.omit(nesarc.sub), aes(SmokingFreq)) +
 g3
 ```
 
+<<<<<<< HEAD
+=======
+### Graphing Numeric Variables
+
+One popular way to graph a continuous variable is to use a histogram.  `R` has the base function `hist` which can be used for this purpose.  We will also use the package `ggplot2` to create histograms.  We start with a basic histogram of the variable `TotalCigsSmoked`.
+
+```{r}
+hist(nesarc.sub$TotalCigsSmoked)
+```
+
+Experiment with the code in the previous code chunk to change the color, the title, and if needed the labels on the $x$- and $y$-axes.
+
+```{r}
+ggplot(data = nesarc.sub, aes(x = TotalCigsSmoked)) +
+  geom_histogram(binwidth = 200, fill = "gray") + 
+  labs(x = "Estimated Cigarettes Smoked per Month") +
+  theme_bw()
+```  
+
+### Creating Density Plots
+
+```{r}
+ggplot(data = nesarc.sub, aes(x = TotalCigsSmoked)) +
+  geom_density(fill = "sienna") + 
+  labs(x = "Estimated Cigarettes Smoked per Month") +
+  theme_bw()
+```  
+
+```{r}
+ggplot(data = nesarc.sub, aes(x = DailyCigsSmoked)) +
+  geom_density(fill = "slategrey") + 
+  labs(x = "Reported Cigarettes Smoked per Day") +
+  theme_bw()
+```  
+
+### The 3 S's
+
+```{r}
+summary(nesarc.sub$TotalCigsSmoked)
+fivenum(nesarc.sub$TotalCigsSmoked)
+median(nesarc.sub$TotalCigsSmoked, na.rm = TRUE)
+IQR(nesarc.sub$TotalCigsSmoked, na.rm = TRUE)
+```
+
+The `shape` of the distribution for the estimated cigarettes smoked per month is skewed to the right.  The `center` (median) of the distribution is `r median(nesarc.sub$TotalCigsSmoked, na.rm = TRUE)` and the `spread` (interquartile range) for the distribution is `r IQR(nesarc.sub$TotalCigsSmoked, na.rm = TRUE)`.
+
+### Bivariate Graphs (C $\rightarrow$ C)
+
+Consider using depression status (`Depression`) to predict nicotine dependence (`TobaccoDependence`).
+
+```{r}
+T1 <- xtabs(~ TobaccoDependence + Depression, data = nesarc.sub)
+T1
+T2 <- prop.table(T1, 2)
+T2
+barplot(T2)
+```
+
+The last graph needs a legend as well as a title.  While it is possible to construct a legend and title for the last graph, it is much better to use an approach that will generate the legend automatically.
+
+```{r}
+g1 <- ggplot(data = nesarc.sub, aes(x = Depression, fill = TobaccoDependence)) +
+  geom_bar(position = "fill") + 
+  theme_bw()
+g1
+```
+
+Tweaking the last graph.  
+
+```{r}
+g1 +
+  labs(x = "", y = "", title = "Fraction of young adult smokers with and without\n nicotine dependence by depression status") + 
+  scale_fill_discrete(name="Tobacco Addiction\nStatus") 
+```
+
+```{r}
+g2 <- ggplot(data = na.omit(nesarc.sub), aes(x = SmokingFreq, fill = TobaccoDependence)) +
+  geom_bar(position = "fill") + 
+  theme_bw()
+g2
+ g3 <- g2 + facet_grid(Sex ~ .) +
+  theme(axis.text.x  = element_text(angle = 85, vjust = 0.5)) +
+  labs(x = "", y = "", title = "Fraction of young adult smokers with and without\n nicotine dependence by smoking frequency") + 
+  scale_fill_discrete(name="Tobacco Addiction\nStatus")
+ g3
+```
+
+
+```{r}
+ggplot(data = na.omit(nesarc.sub), aes(x = CigsSmokedFac, fill = TobaccoDependence)) +
+  geom_bar(position = "fill") + 
+  theme_bw() + facet_grid(Sex ~ Depression) +
+  theme(axis.text.x  = element_text(angle = 85, vjust = 0.5)) +
+  labs(x = "Estimated Number of Cigarettes Smoked per Month", y = "", title = "Fraction of young adult smokers with and without\n nicotine dependence by smoking quantity") + 
+  scale_fill_discrete(name="Tobacco Addiction\nStatus") 
+```
+ 
+
+
+
+>>>>>>> 81983154a562db17196b770b37335ecad3858963
 ### Some Statistics (We have not discussed this yet)
 
 ```{r results='asis', echo = TRUE}
